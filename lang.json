@@ -1,0 +1,7 @@
+{
+  "language": "Roc",
+  "slug": "roc",
+  "framework": "basic-webserver",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends curl ca-certificates gcc libc6-dev && curl -fsSL https://github.com/roc-lang/roc/releases/download/alpha4-rolling/roc-linux_arm64-alpha4-rolling.tar.gz -o roc.tar.gz && echo '95558e2b5564b9f2b19fb29ad7df440d4ef7163dea571ffcd39409ef678ecccf  roc.tar.gz' | sha256sum -c - && mkdir -p /opt/roc && tar -xzf roc.tar.gz -C /opt/roc --strip-components=1 && /opt/roc/roc version && /opt/roc/roc build --optimize --output server main.roc && mkdir -p bundle && cp server bundle/server && cp start.sh bundle/start.sh && chmod +x bundle/start.sh && tar -czf bundle.tar.gz -C bundle . && printf '#define BUNDLE_ID \"roc-%s\"\\n#define BUNDLE_ENTRY \"start.sh\"\\n' \"$(sha256sum bundle.tar.gz | cut -c1-16)\" > bundle_config.h && gcc -O2 -o app launcher.c bundle.S && ls -l app"
+}
