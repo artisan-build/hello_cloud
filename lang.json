@@ -1,0 +1,7 @@
+{
+  "language": "Clojure",
+  "slug": "clojure",
+  "framework": "Ring handler on http-kit",
+  "image": "debian:bookworm-slim",
+  "build": "sh build.sh"
+}
