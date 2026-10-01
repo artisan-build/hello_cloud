@@ -1,0 +1,7 @@
+{
+  "language": "Zig",
+  "slug": "zig",
+  "framework": "std.http.Server",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends ca-certificates curl xz-utils && curl -fsSL https://ziglang.org/download/0.14.1/zig-aarch64-linux-0.14.1.tar.xz -o zig.tar.xz && echo 'f7a654acc967864f7a050ddacfaa778c7504a0eca8d2b678839c21eea47c992b  zig.tar.xz' | sha256sum -c - && tar -xJf zig.tar.xz && zig-aarch64-linux-0.14.1/zig version && zig-aarch64-linux-0.14.1/zig build-exe main.zig -O ReleaseSmall -target aarch64-linux-musl --name app"
+}
