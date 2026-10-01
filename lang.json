@@ -1,0 +1,7 @@
+{
+  "language": "F#",
+  "slug": "fsharp",
+  "framework": "ASP.NET Core minimal API",
+  "image": "mcr.microsoft.com/dotnet/sdk:9.0",
+  "build": "export DOTNET_CLI_TELEMETRY_OPTOUT=1 NUGET_PACKAGES=/tmp/nuget && dotnet publish hello.fsproj -c Release -o /tmp/out && cp /tmp/out/hello app"
+}
