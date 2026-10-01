@@ -1,0 +1,7 @@
+{
+  "language": "Perl",
+  "slug": "perl",
+  "framework": "Mojolicious::Lite, packed with PAR::Packer",
+  "image": "perl:5.40-bookworm",
+  "build": "sh build.sh"
+}
