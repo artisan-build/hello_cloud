@@ -1,0 +1,7 @@
+{
+  "language": "Lua",
+  "slug": "lua",
+  "framework": "Lua 5.4 embedded in a static C host",
+  "image": "debian:bookworm-slim",
+  "build": "sh build.sh"
+}
