@@ -1,0 +1,7 @@
+{
+  "language": "Kotlin",
+  "slug": "kotlin",
+  "framework": "Ktor 3 (CIO engine)",
+  "image": "debian:bookworm-slim",
+  "build": "sh build.sh"
+}
