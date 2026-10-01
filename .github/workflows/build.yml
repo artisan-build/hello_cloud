@@ -106,5 +106,11 @@ jobs:
             gh release create "$tag" --target "$slug" \
               --title "$language binary (linux/arm64)" \
               --notes "Rolling release. The newest asset is built from the head of the \`$slug\` branch; VERSION holds the commit it came from."
-          gh release upload "$tag" app app.sha256 VERSION --clobber
+          # Two calls, on purpose. `gh release upload` uploads its files
+          # CONCURRENTLY, so VERSION could otherwise land before app and the
+          # Cloud build command -- which treats a matching VERSION as "the
+          # binary is there" -- would fetch a 404. Uploading VERSION only after
+          # app is fully up makes that signal honest.
+          gh release upload "$tag" app app.sha256 --clobber
+          gh release upload "$tag" VERSION --clobber
           echo "published https://github.com/${GITHUB_REPOSITORY}/releases/download/$tag/app from $GITHUB_SHA"
