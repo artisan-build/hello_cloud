@@ -88,8 +88,9 @@ sh .cloud/fetch-binary
 `VERSION` equals `LARAVEL_CLOUD_COMMIT_SHA`, checks its SHA-256 and leaves it at
 `./app`. Losing that race on purpose is what makes push-to-deploy safe: a single
 `git push` starts the Actions build and the Cloud deploy at the same time, and
-the Cloud build simply waits for its binary. **No Cloud API token is needed
-anywhere in CI.**
+the Cloud build simply waits for its binary. CI uploads `VERSION` in a second,
+later call so that a matching `VERSION` really does mean the binary is already
+there. **No Cloud API token is needed anywhere in CI.**
 
 **The page and the card are shared, and compiled in.** `shared/page.html` is one
 template with seven placeholders (`{{LANGUAGE}}`, `{{BRANCH}}`, `{{BRANCH_URL}}`,
