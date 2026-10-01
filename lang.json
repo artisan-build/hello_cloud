@@ -1,0 +1,7 @@
+{
+  "language": "Odin",
+  "slug": "odin",
+  "framework": "core:net (no framework)",
+  "image": "debian:bookworm-slim",
+  "build": "sh build.sh"
+}

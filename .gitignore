@@ -11,3 +11,5 @@
 /.zig-cache/
 /zig.tar.xz
 /zig-*-linux-*/
+/odin.tar.gz
+/odin-linux-arm64-*/
