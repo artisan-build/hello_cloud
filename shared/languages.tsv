@@ -1,1 +1,4 @@
 # slug	language	framework or library	live URL   (one row per language; phase-2 workers append here)
+main	Go	net/http (stdlib)	https://hello-cloud-production-kgvqnk.laravel.cloud
+rust	Rust	axum	https://hello-cloud-rust-lxx3gx.laravel.cloud
+zig	Zig	std.http.Server	https://hello-cloud-zig-tifwpj.laravel.cloud
