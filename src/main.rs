@@ -1,10 +1,10 @@
 //! Hello from Rust, on Laravel Cloud's Go runtime.
 //!
-//! Cloud has no Rust runtime. It runs this binary because the branch carries a
-//! `go.mod` at its root, so Cloud detected Go when the environment was created
-//! and starts whatever executable the build command left at `./app`. The build
+//! Laravel Cloud runs this binary because the branch carries a `go.mod` at its
+//! root, so the environment was detected as Go when it was created and Cloud
+//! starts whatever executable the build command left at `./app`. The build
 //! command for this environment never compiles any Go: it downloads the binary
-//! GitHub Actions built from this branch.
+//! GitHub Actions built from this commit.
 //!
 //! Both the shared HTML template and the OG card are compiled in, so nothing on
 //! Cloud's ephemeral filesystem matters once the process is up.
