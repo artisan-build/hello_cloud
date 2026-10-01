@@ -66,17 +66,31 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    /* Unpack NEXT TO the executable by default, not into /tmp: on a container
+     * host /tmp is often a tmpfs, so every byte of the bundle would be charged
+     * to the instance's memory. SFX_DIR overrides, and /tmp is the fallback if
+     * the executable's own directory is not writable. */
+    char dir[8192];
     const char *root = getenv("SFX_DIR");
-    char dir[4096];
-    snprintf(dir, sizeof dir, "%s", root && *root ? root : "/tmp/hc-sfx-" SFX_SLUG);
+    if (root && *root) {
+        snprintf(dir, sizeof dir, "%s", root);
+    } else {
+        char base[4096];
+        snprintf(base, sizeof base, "%s", self);
+        char *slash = strrchr(base, '/');
+        if (slash) *slash = '\0'; else snprintf(base, sizeof base, ".");
+        snprintf(dir, sizeof dir, "%s/.hc-sfx-" SFX_SLUG, base);
+        if (mkdir(dir, 0755) != 0 && errno != EEXIST)
+            snprintf(dir, sizeof dir, "/tmp/hc-sfx-" SFX_SLUG);
+    }
 
-    char ready[4200];
+    char ready[8400];
     snprintf(ready, sizeof ready, "%s/.sfx-ready", dir);
     struct stat st;
     if (stat(ready, &st) != 0) {
         if (mkdir(dir, 0755) != 0 && errno != EEXIST) die("mkdir bundle dir");
 
-        char cmd[8500];
+        char cmd[9000];
         snprintf(cmd, sizeof cmd, "exec tar -xzf - -C '%s'", dir);
         FILE *tar = popen(cmd, "w");
         if (!tar) die("popen tar");
@@ -104,7 +118,7 @@ int main(int argc, char **argv) {
     }
     fclose(f);
 
-    char entry[4300];
+    char entry[8400];
     snprintf(entry, sizeof entry, "%s/" SFX_ENTRY, dir);
     if (setenv("SFX_ROOT", dir, 1) != 0) die("setenv SFX_ROOT");
 
