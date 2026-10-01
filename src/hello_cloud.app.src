@@ -1,0 +1,9 @@
+{application, hello_cloud,
+ [{description, "hello_cloud: Erlang on Laravel Cloud, served by cowboy"},
+  {vsn, "1.0.0"},
+  {registered, []},
+  {mod, {hello_cloud_app, []}},
+  {applications, [kernel, stdlib, cowboy]},
+  {env, []},
+  {licenses, ["MIT"]}
+ ]}.

@@ -1,0 +1,7 @@
+{
+  "language": "Erlang",
+  "slug": "erlang",
+  "framework": "cowboy",
+  "image": "erlang:27.3.4.18-slim",
+  "build": "sh build.sh"
+}
