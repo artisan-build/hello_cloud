@@ -12,7 +12,7 @@
 #
 # The wait is what makes push-to-deploy safe: a push starts the Cloud deploy and
 # the Actions build at the same time, and this loses that race on purpose.
-# Actions uploads `app` before `app.sha256` before `VERSION`, so a VERSION
+# Actions uploads VERSION in a separate, later call than `app`, so a VERSION
 # holding this commit means the binary for this commit is already there.
 set -eu
 
