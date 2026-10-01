@@ -1,0 +1,7 @@
+{
+  "language": "D",
+  "slug": "d",
+  "framework": "std.socket (no framework)",
+  "image": "alpine:3.22",
+  "build": "sh build.sh"
+}

@@ -11,3 +11,5 @@
 /.zig-cache/
 /zig.tar.xz
 /zig-*-linux-*/
+/ldc.tar.xz
+/ldc2-*/
