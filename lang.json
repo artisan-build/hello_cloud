@@ -1,0 +1,7 @@
+{
+  "language": "Pascal",
+  "slug": "pascal",
+  "framework": "RTL Sockets unit (hand-rolled HTTP; fphttpserver is IPv4-only)",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends fpc binutils && cp shared/page.html page.html && cp shared/index-url.txt index_url.txt && ld -r -b binary -o assets.o page.html index_url.txt og.png && mkdir -p .fpcout && fpc -O2 -Xs -FE. -FU.fpcout -oapp app.pas"
+}
