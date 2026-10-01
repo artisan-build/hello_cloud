@@ -48,10 +48,10 @@ footer{margin-top:34px;color:var(--mut);font-size:13px}
 <main>
 <p class="eyebrow">running on Laravel Cloud</p>
 <h1>Hello from {{LANGUAGE}}</h1>
-<p class="sub">This page comes from a native <code>linux/arm64</code> binary written in {{LANGUAGE}}. Laravel Cloud has no {{LANGUAGE}} runtime &mdash; it runs this because the branch carries a <code>go.mod</code> at its root, so Cloud picked its Go runtime and starts whatever executable it finds at <code>./app</code>.</p>
+<p class="sub">This page comes from a native <code>linux/arm64</code> binary written in {{LANGUAGE}}. Laravel Cloud runs it because the branch carries a <code>go.mod</code> at its root, so Cloud picked its Go runtime and starts whatever executable it finds at <code>./app</code>.</p>
 <p class="links"><a href="{{BRANCH_URL}}">branch <code>{{BRANCH}}</code> on GitHub</a><a href="{{INDEX_URL}}">every language</a></p>
 {{EXTRA}}
-<footer>A toy by <a href="https://github.com/artisan-build">artisan-build</a>. Not affiliated with Laravel.</footer>
+<footer><a href="https://scalpels.app/lab">An experiment from the Scalpels Lab</a>. Not affiliated with Laravel.</footer>
 </main>
 </body>
 </html>

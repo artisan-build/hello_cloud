@@ -2,9 +2,12 @@
 # binaries are built in CI and published as release assets, and og.png is
 # generated from tools/ogen.
 /app
+/app.o
 /hello
 /og.png
 /og-served.png
 /target/
 /zig-out/
 /.zig-cache/
+/zig.tar.xz
+/zig-*-linux-*/

@@ -1,8 +1,8 @@
-// Command app is the index for hello_cloud, and the honest control in the
-// experiment: `main` really is a Go module, so Laravel Cloud's Go runtime
-// compiles and runs this one natively with no trick involved. Every other
-// branch serves the same page from a binary in another language that Cloud
-// only runs because this file's neighbour, go.mod, makes it look like Go.
+// Command app is the index for hello_cloud. Laravel Cloud runs it because the
+// branch carries a go.mod, so the environment was detected as Go -- and here
+// that is the literal truth: `main` is a real Go module and Cloud compiles this
+// file. Every other branch gets the same treatment from Cloud and answers with
+// a binary built from another language instead.
 //
 // This is also the reference implementation of the shared page's placeholder
 // substitution, which every language branch re-implements in a dozen lines of
