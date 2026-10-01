@@ -1,8 +1,8 @@
 //! Hello from Zig, on Laravel Cloud's Go runtime.
 //!
-//! Cloud has no Zig runtime. It runs this binary because the branch carries a
-//! `go.mod` at its root, so Cloud detected Go when the environment was created
-//! and starts whatever executable the build command left at `./app`. No Go is
+//! Laravel Cloud runs this binary because the branch carries a `go.mod` at its
+//! root, so the environment was detected as Go when it was created and Cloud
+//! starts whatever executable the build command left at `./app`. No Go is
 //! compiled for this branch; the build command downloads the binary that GitHub
 //! Actions built from this commit.
 //!
