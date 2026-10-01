@@ -1,0 +1,7 @@
+{
+  "language": "Bun",
+  "slug": "bun",
+  "framework": "Bun.serve",
+  "image": "oven/bun:1.4.2-debian",
+  "build": "bun build --compile --minify --target=bun-linux-arm64 --outfile app main.ts"
+}
