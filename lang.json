@@ -1,0 +1,7 @@
+{
+  "language": "C#",
+  "slug": "csharp",
+  "framework": "ASP.NET Core minimal API (NativeAOT)",
+  "image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends clang zlib1g-dev && cd csharpapp && dotnet publish -c Release -r linux-arm64 --nologo -o /tmp/out && cp /tmp/out/app ../app"
+}
