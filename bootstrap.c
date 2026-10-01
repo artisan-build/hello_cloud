@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
      * host /tmp is often a tmpfs, so every byte of the bundle would be charged
      * to the instance's memory. SFX_DIR overrides, and /tmp is the fallback if
      * the executable's own directory is not writable. */
-    char dir[4096];
+    char dir[8192];
     const char *root = getenv("SFX_DIR");
     if (root && *root) {
         snprintf(dir, sizeof dir, "%s", root);
@@ -84,13 +84,13 @@ int main(int argc, char **argv) {
             snprintf(dir, sizeof dir, "/tmp/hc-sfx-" SFX_SLUG);
     }
 
-    char ready[4200];
+    char ready[8400];
     snprintf(ready, sizeof ready, "%s/.sfx-ready", dir);
     struct stat st;
     if (stat(ready, &st) != 0) {
         if (mkdir(dir, 0755) != 0 && errno != EEXIST) die("mkdir bundle dir");
 
-        char cmd[8500];
+        char cmd[9000];
         snprintf(cmd, sizeof cmd, "exec tar -xzf - -C '%s'", dir);
         FILE *tar = popen(cmd, "w");
         if (!tar) die("popen tar");
@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
     }
     fclose(f);
 
-    char entry[4300];
+    char entry[8400];
     snprintf(entry, sizeof entry, "%s/" SFX_ENTRY, dir);
     if (setenv("SFX_ROOT", dir, 1) != 0) die("setenv SFX_ROOT");
 

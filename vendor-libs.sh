@@ -19,6 +19,11 @@ done | sort -u | while read -r so; do
         libc.so.6|libm.so.6|libdl.so.2|libpthread.so.0|librt.so.1|libresolv.so.2|\
         libutil.so.1|libgcc_s.so.1|ld-linux-aarch64.so.1|libz.so.1|libanl.so.1) continue ;;
     esac
+    # A jlink runtime image ships its own libjava/libjli/libnet; don't shadow
+    # them with a second copy on LD_LIBRARY_PATH.
+    if find "$dir" -name "$(basename "$so")" ! -path "$dir/native/*" | grep -q .; then
+        continue
+    fi
     cp -n "$so" "$dir/native/" 2>/dev/null || true
 done
 
