@@ -1,0 +1,10 @@
+name: hello_cloud
+description: Hello from Dart, served by a native linux/arm64 binary on Laravel Cloud.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  shelf: ^1.4.2

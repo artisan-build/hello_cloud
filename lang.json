@@ -1,0 +1,7 @@
+{
+  "language": "Dart",
+  "slug": "dart",
+  "framework": "shelf",
+  "image": "dart:stable",
+  "build": "cd dartapp && dart pub get && dart run tool/embed.dart && dart compile exe bin/server.dart -o ../app"
+}
