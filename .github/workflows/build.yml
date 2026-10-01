@@ -57,7 +57,7 @@ jobs:
           docker run --rm --platform linux/arm64 \
             -v "$PWD":/src -w /src \
             -e LANGUAGE="$language" -e SLUG="$slug" \
-            "$image" sh -lc "set -eux; $build"
+            "$image" sh -c "set -eux; $build"
           sudo chown "$(id -u):$(id -g)" app
           chmod +x app
 

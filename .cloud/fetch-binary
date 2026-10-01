@@ -1,0 +1,47 @@
+#!/bin/sh
+# The Laravel Cloud build command for EVERY language branch, verbatim:
+#
+#     sh .cloud/fetch-binary
+#
+# It takes no argument: the branch name is the language slug, and Cloud puts it
+# in LARAVEL_CLOUD_ENV_BRANCH. So the same string works for all ~30 languages.
+#
+# What it does: wait for the GitHub Actions release asset that was built from
+# EXACTLY the commit being deployed, verify its checksum, and leave it at ./app
+# -- which is all Cloud's Go runtime start command needs. No `go build` runs.
+#
+# The wait is what makes push-to-deploy safe: a push starts the Cloud deploy and
+# the Actions build at the same time, and this loses that race on purpose.
+# Actions uploads `app` before `app.sha256` before `VERSION`, so a VERSION
+# holding this commit means the binary for this commit is already there.
+set -eu
+
+SLUG="${LARAVEL_CLOUD_ENV_BRANCH:?no LARAVEL_CLOUD_ENV_BRANCH; is this running on Cloud?}"
+SHA="${LARAVEL_CLOUD_COMMIT_SHA:?no LARAVEL_CLOUD_COMMIT_SHA}"
+BASE="https://github.com/artisan-build/hello_cloud/releases/download/bin-$SLUG"
+
+# 60 x 10s = 10 minutes, inside Cloud's 15-minute build cap.
+ATTEMPTS=60
+i=1
+while [ "$i" -le "$ATTEMPTS" ]; do
+    if curl -fsSL "$BASE/VERSION" -o VERSION 2>/dev/null && grep -q "^$SHA$" VERSION; then
+        echo "fetch-binary: bin-$SLUG was built from $SHA"
+        break
+    fi
+    echo "fetch-binary: waiting for the bin-$SLUG asset built from $SHA (attempt $i/$ATTEMPTS, have: $(cat VERSION 2>/dev/null || echo none))"
+    i=$((i + 1))
+    sleep 10
+done
+
+if ! grep -q "^$SHA$" VERSION 2>/dev/null; then
+    echo "fetch-binary: no bin-$SLUG asset for $SHA after $ATTEMPTS attempts." >&2
+    echo "fetch-binary: check the 'build' workflow run for this commit." >&2
+    exit 1
+fi
+
+curl -fsSL "$BASE/app" -o app
+curl -fsSL "$BASE/app.sha256" -o app.sha256
+sha256sum -c app.sha256
+chmod +x app
+ls -l app
+echo "fetch-binary: ./app is ready; Cloud's Go runtime will start it."

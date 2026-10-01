@@ -1,1 +1,1 @@
-https://REPLACED-AFTER-APP-CREATE
+https://hello-cloud-production-kgvqnk.laravel.cloud
