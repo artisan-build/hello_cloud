@@ -1,0 +1,7 @@
+{
+  "language": "Fortran",
+  "slug": "fortran",
+  "framework": "libc BSD sockets via ISO_C_BINDING (hand-rolled HTTP)",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends gfortran && gfortran -O2 -o genassets genassets.f90 && ./genassets && gfortran -O2 -static -ffree-line-length-none -o app assets.f90 app.f90 && strip app && ls -l app"
+}
