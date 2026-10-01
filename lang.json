@@ -1,0 +1,7 @@
+{
+  "language": "Deno",
+  "slug": "deno",
+  "framework": "Deno.serve (std http)",
+  "image": "denoland/deno:debian-2.9.7",
+  "build": "deno compile --unstable-raw-imports --no-check -A --output app main.ts"
+}
