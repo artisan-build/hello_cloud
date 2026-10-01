@@ -1,0 +1,20 @@
+[package]
+name = "app"
+version = "0.1.0"
+edition = "2021"
+# This branch has NO go.mod. Its root is a Cargo workspace, which is what
+# Laravel Cloud's runtime detection reads when an environment is created, so
+# this environment builds from source on Cloud with `cargo build --release`.
+# Cloud's build and runtime images are both Debian 12 / glibc 2.36, so the
+# default host target is the right one -- no musl, no cross-compilation.
+
+[dependencies]
+axum = { version = "0.7", default-features = false, features = ["http1", "tokio"] }
+tokio = { version = "1", default-features = false, features = ["rt-multi-thread", "macros", "net", "signal", "time"] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
