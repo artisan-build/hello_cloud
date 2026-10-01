@@ -1,0 +1,7 @@
+{
+  "language": "C++",
+  "slug": "cpp",
+  "framework": "cpp-httplib v0.58.0 (single header)",
+  "image": "alpine:3.22",
+  "build": "sh build.sh"
+}
