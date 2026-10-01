@@ -1,0 +1,7 @@
+{
+  "language": "COBOL",
+  "slug": "cobol",
+  "framework": "libc BSD sockets via GnuCOBOL CALL (hand-rolled HTTP)",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends gnucobol3 libcob4-dev libgmp-dev libncurses-dev libdb-dev && mkdir -p /tmp/cobfix && (cd /tmp/cobfix && ar x $(ls /usr/lib/*/libcob.a | head -1) && rm -f mlio.o && ar rcs libcob.a *.o) && ./genassets.sh && COB_LIBS=\"-L/tmp/cobfix -lcob -lgmp -lncursesw -ltinfo -ldb -lm\" cobc -x -free -O2 -fstatic-call -o app app.cob -Q -static -Q -Wl,--defsym=cob_init_mlio=getpid -Q -Wl,--defsym=cob_exit_mlio=getpid -Q -Wl,--defsym=xmlCheckVersion=getpid -Q -Wl,--defsym=xmlCleanupParser=getpid && strip app && ls -l app"
+}
