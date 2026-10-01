@@ -11,3 +11,4 @@
 /.zig-cache/
 /zig.tar.xz
 /zig-*-linux-*/
+/assets.o
