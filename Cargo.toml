@@ -1,0 +1,18 @@
+[package]
+name = "hello"
+version = "0.1.0"
+edition = "2021"
+# Debian 12 (bookworm) is Laravel Cloud's runtime image, so the build container
+# is bookworm too and this links against the glibc 2.36 that is already there.
+# No musl target, no cross-compilation.
+
+[dependencies]
+axum = { version = "0.7", default-features = false, features = ["http1", "tokio"] }
+tokio = { version = "1", default-features = false, features = ["rt-multi-thread", "macros", "net", "signal"] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

@@ -1,0 +1,7 @@
+{
+  "language": "Rust",
+  "slug": "rust",
+  "framework": "axum",
+  "image": "rust:1-bookworm",
+  "build": "cargo build --release --locked && cp target/release/hello app"
+}
