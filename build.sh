@@ -1,6 +1,10 @@
 #!/bin/sh
 # Builds ./app for the java branch, inside the image lang.json names.
 #
+# The Maven project lives in jvm/, not at the branch root: Cloud reads the root
+# to pick a runtime and REFUSES a branch whose root has a pom.xml ("uses an
+# unsupported framework"). One directory down, the root is just main's go.mod.
+#
 # debian:bookworm-slim rather than a JDK image on purpose: Cloud's runtime is
 # Debian 12, and vendor-libs.sh copies libraries out of THIS image into the
 # bundle, so the build image's glibc has to be the runtime's. Debian's own
@@ -18,12 +22,12 @@ JAVA_HOME=$(dirname "$(dirname "$(readlink -f "$(command -v javac)")")")
 export JAVA_HOME
 "$JAVA_HOME/bin/java" -version
 
-mvn -q -B -Dmaven.repo.local=target/m2 package
+mvn -q -B -f jvm/pom.xml -Dmaven.repo.local="$PWD/target/m2" package
 
 bundle=target/bundle
 rm -rf "$bundle"
 mkdir -p "$bundle"
-cp target/app.jar "$bundle/app.jar"
+cp target/maven/app.jar "$bundle/app.jar"
 
 # jdeps works out which platform modules the shaded jar actually touches, so
 # the runtime image stays small without a hand-maintained module list.

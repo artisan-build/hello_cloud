@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Two dependencies and a shade plugin. Maven's default build directory is
-  target/, which main's .gitignore already ignores, so nothing here needs a
-  shared file changed.
+  This file lives in jvm/ and NOT at the branch root on purpose. Laravel Cloud
+  reads the branch root to pick a runtime, and a pom.xml there makes it refuse
+  the branch outright: "The [java] branch ... uses an unsupported framework."
+  One directory down, the root carries only main's go.mod, Cloud detects Go, and
+  the build command is free to produce ./app however it likes.
+
+  Maven's build directory is pushed to the repo's target/, which main's
+  .gitignore already ignores, so nothing here needs a shared file changed.
 
   The page template, the index URL and the OG card are declared as RESOURCES
   from their own directories rather than copied into src/main/resources: that
@@ -38,14 +43,15 @@
   </dependencies>
 
   <build>
+    <directory>${project.basedir}/../target/maven</directory>
     <finalName>hello-cloud</finalName>
     <resources>
       <resource>
-        <directory>${project.basedir}</directory>
+        <directory>${project.basedir}/..</directory>
         <includes><include>og.png</include></includes>
       </resource>
       <resource>
-        <directory>${project.basedir}/shared</directory>
+        <directory>${project.basedir}/../shared</directory>
         <includes>
           <include>page.html</include>
           <include>index-url.txt</include>
