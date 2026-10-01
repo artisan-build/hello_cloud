@@ -1,0 +1,7 @@
+{
+  "language": "Nim",
+  "slug": "nim",
+  "framework": "std/asynchttpserver",
+  "image": "nimlang/nim:2.2.4",
+  "build": "nim c -d:release --opt:size --nimcache:/tmp/nimcache -o:app main.nim"
+}
