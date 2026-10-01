@@ -1,0 +1,7 @@
+{
+  "language": "Java",
+  "slug": "java",
+  "framework": "Javalin 6 (Jetty)",
+  "image": "debian:bookworm-slim",
+  "build": "sh build.sh"
+}

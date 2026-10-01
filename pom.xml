@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Two dependencies and a shade plugin. Maven's default build directory is
+  target/, which main's .gitignore already ignores, so nothing here needs a
+  shared file changed.
+
+  The page template, the index URL and the OG card are declared as RESOURCES
+  from their own directories rather than copied into src/main/resources: that
+  puts them inside the jar (so nothing is read from Cloud's ephemeral
+  filesystem) and leaves no untracked files in the working tree.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>build.artisan</groupId>
+  <artifactId>hello-cloud</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.javalin</groupId>
+      <artifactId>javalin</artifactId>
+      <version>6.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>2.0.16</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>hello-cloud</finalName>
+    <resources>
+      <resource>
+        <directory>${project.basedir}</directory>
+        <includes><include>og.png</include></includes>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/shared</directory>
+        <includes>
+          <include>page.html</include>
+          <include>index-url.txt</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <!-- Pinned: Debian's maven 3.8.7 defaults to compiler-plugin 3.1, which
+           predates <release> and tries to compile for Java 5. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration><release>17</release></configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals><goal>shade</goal></goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <finalName>app</finalName>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <manifestEntries>
+                    <Main-Class>build.artisan.hellocloud.App</Main-Class>
+                    <Multi-Release>true</Multi-Release>
+                  </manifestEntries>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
