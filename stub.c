@@ -19,6 +19,7 @@
  */
 
 #include <errno.h>
+#include <limits.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -33,11 +34,15 @@
 #error "compile with -DPAYLOAD_LEN=<bytes of appended tarball>"
 #endif
 
-/* A fixed path, not mkdtemp: a crash-looping container would otherwise fill
- * the disk with copies of a 300 MB bundle. */
-#define ROOT "/tmp/hello_cloud-julia"
-#define MARKER ROOT "/.extracted"
-#define LAUNCHER ROOT "/bin/HelloCloud"
+/* Fixed paths, not mkdtemp: a crash-looping container would otherwise fill the
+ * disk with copies of a 425 MB bundle. First one that is writable wins. */
+static const char *const ROOTS[] = {
+    ".hello_cloud-julia",      /* the deploy directory: real disk on Cloud */
+    "/tmp/hello_cloud-julia",  /* fallback, and what a bare docker run uses */
+};
+
+#define MARKER_NAME "/.extracted"
+#define LAUNCHER_NAME "/bin/HelloCloud"
 
 static void die(const char *what)
 {
@@ -45,12 +50,9 @@ static void die(const char *what)
     exit(1);
 }
 
-/* Pipes the appended payload into `tar -xzf - -C ROOT`. */
-static void extract(int self, off_t start, uint64_t len)
+/* Pipes the appended payload into `tar -xzf - -C root`. */
+static void extract(int self, off_t start, uint64_t len, const char *root)
 {
-    if (mkdir(ROOT, 0755) != 0 && errno != EEXIST)
-        die("mkdir " ROOT);
-
     int fds[2];
     if (pipe(fds) != 0)
         die("pipe");
@@ -64,7 +66,7 @@ static void extract(int self, off_t start, uint64_t len)
         if (dup2(fds[0], STDIN_FILENO) < 0)
             die("dup2");
         close(fds[0]);
-        execlp("tar", "tar", "-xzf", "-", "-C", ROOT, (char *)NULL);
+        execlp("tar", "tar", "-xzf", "-", "-C", root, (char *)NULL);
         die("exec tar");
     }
 
@@ -103,10 +105,26 @@ static void extract(int self, off_t start, uint64_t len)
         exit(1);
     }
 
-    int marker = open(MARKER, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (marker < 0)
-        die("open " MARKER);
-    close(marker);
+}
+
+/* The first ROOTS entry we can actually create and write into. A directory
+ * that already holds a finished extraction wins outright. */
+static const char *pick_root(void)
+{
+    static char path[PATH_MAX];
+
+    for (size_t i = 0; i < sizeof ROOTS / sizeof ROOTS[0]; i++) {
+        if (mkdir(ROOTS[i], 0755) != 0 && errno != EEXIST)
+            continue;
+        snprintf(path, sizeof path, "%s/.probe", ROOTS[i]);
+        int probe = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (probe < 0)
+            continue;
+        close(probe);
+        unlink(path);
+        return ROOTS[i];
+    }
+    return NULL;
 }
 
 int main(int argc, char **argv)
@@ -127,15 +145,38 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    const char *root = pick_root();
+    if (root == NULL) {
+        fprintf(stderr, "hello_cloud: no writable directory for the bundle\n");
+        return 1;
+    }
+
+    char marker[PATH_MAX];
+    char launcher[PATH_MAX];
+    snprintf(marker, sizeof marker, "%s%s", root, MARKER_NAME);
+    snprintf(launcher, sizeof launcher, "%s%s", root, LAUNCHER_NAME);
+
     struct stat st;
-    if (stat(MARKER, &st) != 0)
-        extract(self, start, (uint64_t)PAYLOAD_LEN);
+    if (stat(marker, &st) == 0) {
+        printf("hello_cloud: bundle already extracted in %s\n", root);
+    } else {
+        printf("hello_cloud: extracting the %lld-byte bundle into %s\n",
+               (long long)PAYLOAD_LEN, root);
+        fflush(stdout);
+        extract(self, start, (uint64_t)PAYLOAD_LEN, root);
+
+        int fd = open(marker, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (fd < 0)
+            die("open the marker file");
+        close(fd);
+    }
+    fflush(stdout);
     close(self);
 
     /* The bundle's launcher replaces this process, so Cloud's start command
      * still has exactly one process to supervise. */
-    execv(LAUNCHER, argv);
+    execv(launcher, argv);
     (void)argc;
-    die("exec " LAUNCHER);
+    die("exec the launcher");
     return 1;
 }
