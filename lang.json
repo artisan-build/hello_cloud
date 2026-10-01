@@ -1,0 +1,7 @@
+{
+  "language": "Swift",
+  "slug": "swift",
+  "framework": "Hummingbird 2",
+  "image": "swift:6.2-bookworm",
+  "build": "sh build.sh"
+}
