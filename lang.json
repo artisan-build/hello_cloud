@@ -1,0 +1,7 @@
+{
+  "language": "Racket",
+  "slug": "racket",
+  "framework": "web-server (racket/web-server)",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends racket ca-certificates gcc libc6-dev && raco make main.rkt && raco exe -o hello main.rkt && raco distribute dist hello && tar -czf bundle.tar.gz -C dist . && printf '#define BUNDLE_ID \"racket-%s\"\\n#define BUNDLE_ENTRY \"bin/hello\"\\n' \"$(sha256sum bundle.tar.gz | cut -c1-16)\" > bundle_config.h && cat bundle_config.h && gcc -O2 -o app launcher.c bundle.S && ls -l app"
+}
