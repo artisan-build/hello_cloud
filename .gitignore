@@ -1,0 +1,10 @@
+# Build output. Nothing binary is ever committed to this repo: the language
+# binaries are built in CI and published as release assets, and og.png is
+# generated from tools/ogen.
+/app
+/hello
+/og.png
+/og-served.png
+/target/
+/zig-out/
+/.zig-cache/
