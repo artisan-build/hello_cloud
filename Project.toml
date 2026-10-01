@@ -1,0 +1,7 @@
+name = "HelloCloud"
+uuid = "caea1019-1b69-468b-8064-bcbdb956e18c"
+version = "0.1.0"
+
+# No [deps] here on purpose: build.sh runs Pkg.add, which writes each dependency
+# and its exact UUID into this file and pins the resolution in Manifest.toml.
+# Hand-written UUIDs are a good way to install the wrong package.

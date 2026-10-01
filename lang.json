@@ -1,0 +1,7 @@
+{
+  "language": "Julia",
+  "slug": "julia",
+  "framework": "HTTP.jl, compiled with PackageCompiler",
+  "image": "julia:1.11-bookworm",
+  "build": "sh build.sh"
+}
