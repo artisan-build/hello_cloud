@@ -1,0 +1,7 @@
+{
+  "language": "V",
+  "slug": "v",
+  "framework": "veb",
+  "image": "debian:bookworm-slim",
+  "build": "sh build.sh"
+}
