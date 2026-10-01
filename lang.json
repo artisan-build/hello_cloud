@@ -1,0 +1,7 @@
+{
+  "language": "Haskell",
+  "slug": "haskell",
+  "framework": "Scotty (on Warp)",
+  "image": "haskell:9.10-slim-bookworm",
+  "build": "cabal update && cabal build -j --enable-executable-stripping && cp \"$(cabal list-bin hello)\" app"
+}
