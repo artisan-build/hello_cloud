@@ -1,0 +1,7 @@
+{
+  "language": "Crystal",
+  "slug": "crystal",
+  "framework": "Kemal",
+  "image": "alpine:3.22",
+  "build": "apk add --no-cache crystal shards git gcc musl-dev make gc-dev gc-static pcre2-dev pcre2-static openssl-dev openssl-libs-static zlib-static yaml-static libevent-static && cd crystalapp && shards install --production && crystal build --static --release --no-debug -o ../app src/server.cr"
+}

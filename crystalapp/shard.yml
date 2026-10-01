@@ -1,0 +1,15 @@
+name: hello_cloud
+version: 1.0.0
+description: Hello from Crystal, served by a native linux/arm64 binary on Laravel Cloud.
+
+targets:
+  app:
+    main: src/server.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+    version: ~> 1.7.0
+
+crystal: ">= 1.16.0"
+license: MIT
