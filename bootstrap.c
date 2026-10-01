@@ -66,9 +66,23 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    const char *root = getenv("SFX_DIR");
+    /* Unpack NEXT TO the executable by default, not into /tmp: on a container
+     * host /tmp is often a tmpfs, so every byte of the bundle would be charged
+     * to the instance's memory. SFX_DIR overrides, and /tmp is the fallback if
+     * the executable's own directory is not writable. */
     char dir[4096];
-    snprintf(dir, sizeof dir, "%s", root && *root ? root : "/tmp/hc-sfx-" SFX_SLUG);
+    const char *root = getenv("SFX_DIR");
+    if (root && *root) {
+        snprintf(dir, sizeof dir, "%s", root);
+    } else {
+        char base[4096];
+        snprintf(base, sizeof base, "%s", self);
+        char *slash = strrchr(base, '/');
+        if (slash) *slash = '\0'; else snprintf(base, sizeof base, ".");
+        snprintf(dir, sizeof dir, "%s/.hc-sfx-" SFX_SLUG, base);
+        if (mkdir(dir, 0755) != 0 && errno != EEXIST)
+            snprintf(dir, sizeof dir, "/tmp/hc-sfx-" SFX_SLUG);
+    }
 
     char ready[4200];
     snprintf(ready, sizeof ready, "%s/.sfx-ready", dir);
