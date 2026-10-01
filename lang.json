@@ -1,0 +1,7 @@
+{
+  "language": "Ada",
+  "slug": "ada",
+  "framework": "GNAT.Sockets (hand-rolled HTTP)",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends gnat binutils && cp shared/page.html page.html && cp shared/index-url.txt index_url.txt && ld -r -b binary -o assets.o page.html index_url.txt og.png && ADALIB=$(ls -d /usr/lib/gcc/*/*/adalib | head -1) && mkdir -p /tmp/alib && for l in gnat gnarl; do ln -sf \"$ADALIB/lib$l.a\" \"/tmp/alib/lib$l-12.a\"; done && gnatmake -O2 app.adb -o app -largs assets.o -static -L/tmp/alib && strip app && ls -l app"
+}
