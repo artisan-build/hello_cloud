@@ -1,0 +1,7 @@
+{
+  "language": "Common Lisp",
+  "slug": "common-lisp",
+  "framework": "Hunchentoot (SBCL save-lisp-and-die executable)",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends sbcl curl ca-certificates && curl -fsSL https://beta.quicklisp.org/quicklisp.lisp -o /tmp/quicklisp.lisp && sbcl --non-interactive --load build.lisp && chmod +x app && ls -l app"
+}
