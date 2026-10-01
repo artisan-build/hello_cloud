@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This file lives in jvm/ and NOT at the branch root on purpose. Laravel Cloud
+  reads the branch root to pick a runtime, and a pom.xml there makes it refuse
+  the branch outright: "The [scala] branch ... uses an unsupported framework."
+  One directory down, the root carries only main's go.mod, Cloud detects Go, and
+  the build command is free to produce ./app however it likes.
+
+  The page template, the index URL and the OG card are declared as RESOURCES
+  from the repo root rather than copied into src/main/resources: that puts them
+  inside the jar (so nothing is read from Cloud's ephemeral filesystem) and
+  leaves no untracked files in the working tree.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>build.artisan</groupId>
+  <artifactId>hello-cloud</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <scala.version>3.3.4</scala.version>
+    <cask.version>0.9.7</cask.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala3-library_3</artifactId>
+      <version>${scala.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.lihaoyi</groupId>
+      <artifactId>cask_3</artifactId>
+      <version>${cask.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <directory>${project.basedir}/../target/maven</directory>
+    <finalName>hello-cloud</finalName>
+    <sourceDirectory>${project.basedir}/src/main/scala</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/..</directory>
+        <includes><include>og.png</include></includes>
+      </resource>
+      <resource>
+        <directory>${project.basedir}/../shared</directory>
+        <includes>
+          <include>page.html</include>
+          <include>index-url.txt</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>4.9.2</version>
+        <configuration>
+          <scalaVersion>${scala.version}</scalaVersion>
+          <args>
+            <arg>-release:17</arg>
+            <arg>-deprecation</arg>
+          </args>
+        </configuration>
+        <executions>
+          <execution>
+            <id>scala-compile</id>
+            <phase>compile</phase>
+            <goals><goal>compile</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals><goal>shade</goal></goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <finalName>app</finalName>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <manifestEntries>
+                    <Main-Class>build.artisan.hellocloud.Main</Main-Class>
+                    <Multi-Release>true</Multi-Release>
+                  </manifestEntries>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

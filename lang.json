@@ -1,0 +1,7 @@
+{
+  "language": "Scala",
+  "slug": "scala",
+  "framework": "cask (Undertow)",
+  "image": "debian:bookworm-slim",
+  "build": "sh build.sh"
+}
