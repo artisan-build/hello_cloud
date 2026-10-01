@@ -1,0 +1,7 @@
+{
+  "language": "Elixir",
+  "slug": "elixir",
+  "framework": "Plug + Bandit",
+  "image": "hexpm/elixir:1.18.5-erlang-27.3.4.18-debian-bookworm-20260918-slim",
+  "build": "sh build.sh"
+}
