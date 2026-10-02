@@ -25,6 +25,7 @@
 with Ada.Environment_Variables;
 with Ada.Streams;              use Ada.Streams;
 with Ada.Strings.Fixed;
+with Ada.Strings.Maps;
 with Ada.Strings.Maps.Constants;
 with Ada.Text_IO;              use Ada.Text_IO;
 with GNAT.Sockets;             use GNAT.Sockets;
@@ -242,6 +243,19 @@ procedure App is
          Host (1 .. 9) := "localhost";
          Host_Last := 9;
       end if;
+
+      --  Route on the path alone. Social sites append `?fbclid=...` and
+      --  `?utm_source=...`, so the query string -- and a fragment, if a client
+      --  ever sends one -- is cut off the target before it is compared.
+      declare
+         Cut : constant Natural :=
+           Ada.Strings.Fixed.Index (Target (1 .. Target_Last),
+                                    Ada.Strings.Maps.To_Set ("?#"));
+      begin
+         if Cut > 0 then
+            Target_Last := Cut - 1;
+         end if;
+      end;
 
       if Target (1 .. Target_Last) = "/og.png" then
          Respond_Og (Socket);
