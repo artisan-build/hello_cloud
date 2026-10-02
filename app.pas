@@ -130,7 +130,7 @@ var
   Buf: array[0..8191] of Byte;
   Got, Used: PtrInt;
   Head, Line, Target, Host, Lowered: AnsiString;
-  Blank, Space1, Space2, Colon, Eol: SizeInt;
+  Blank, Space1, Space2, Colon, Eol, Cut: SizeInt;
 begin
   Result := 0;
   Sock := LongInt(PtrUInt(Parameter));
@@ -170,6 +170,15 @@ begin
     if Space2 > 0 then
       Target := Copy(Target, 1, Space2 - 1);
   end;
+
+  { Shared links arrive with ?fbclid=... or #frag appended. Route on the
+    path alone, so /?x=1 is still the page and /og.png?x=1 still the card. }
+  for Cut := 1 to Length(Target) do
+    if (Target[Cut] = '?') or (Target[Cut] = '#') then
+    begin
+      Target := Copy(Target, 1, Cut - 1);
+      Break;
+    end;
 
   Host := 'localhost';
   Lowered := LowerCase(Head);
