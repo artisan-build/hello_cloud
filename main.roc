@@ -14,6 +14,7 @@ app [Model, init!, respond!] {
 }
 
 import pf.Http exposing [Request, Response]
+import pf.Url
 
 import "shared/page.html" as page_template : Str
 import "shared/index-url.txt" as index_url_file : Str
@@ -28,9 +29,17 @@ Model : {}
 init! : {} => Result Model []
 init! = |{}| Ok({})
 
+# `req.uri` is the raw request target, so it carries whatever query string a
+# shared link brings with it. `Str.ends_with(req.uri, "/og.png")` was false for
+# `/og.png?utm_source=x`, and the else branch then served the HTML page as the
+# OG card -- and served it for every other path too, so nothing 404ed.
+# `Url.path` is the platform's own accessor; it drops both the query and any
+# fragment, which leaves the two routes exact.
 respond! : Request, Model => Result Response [ServerErr Str]_
 respond! = |req, _|
-    if Str.ends_with(req.uri, "/og.png") then
+    path = req.uri |> Url.from_str |> Url.path
+
+    if path == "/og.png" then
         Ok(
             {
                 status: 200,
@@ -41,12 +50,20 @@ respond! = |req, _|
                 body: og_png,
             },
         )
-    else
+    else if path == "/" then
         Ok(
             {
                 status: 200,
                 headers: [{ name: "Content-Type", value: "text/html; charset=utf-8" }],
                 body: Str.to_utf8(render(host_of(req))),
+            },
+        )
+    else
+        Ok(
+            {
+                status: 404,
+                headers: [{ name: "Content-Type", value: "text/plain; charset=utf-8" }],
+                body: Str.to_utf8("not found\n"),
             },
         )
 
