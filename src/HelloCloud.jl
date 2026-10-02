@@ -51,10 +51,15 @@ function page(host::AbstractString)
 end
 
 function handle(req::HTTP.Request)
-    if req.target == "/og.png"
+    # `req.target` is the raw request target, query string and all, so a shared
+    # link (`/?fbclid=...`, `/og.png?utm_source=...`) never equals "/" or
+    # "/og.png". Parse it the way HTTP.jl's own Router does -- `URI(target).path`
+    # -- which drops the query and any fragment.
+    path = HTTP.URI(req.target).path
+    if path == "/og.png"
         return HTTP.Response(200, ["Content-Type" => "image/png",
                                   "Cache-Control" => "public, max-age=3600"], OG_PNG)
-    elseif req.target == "/"
+    elseif path == "/"
         host = HTTP.header(req, "Host", "localhost")
         return HTTP.Response(200, ["Content-Type" => "text/html; charset=utf-8"], page(host))
     end
