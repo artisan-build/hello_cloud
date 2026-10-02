@@ -1,0 +1,7 @@
+{
+  "language": "Forth",
+  "slug": "forth",
+  "framework": "gforth 0.7.3 + unix/socket.fs",
+  "image": "debian:bookworm-slim",
+  "build": "apt-get update -qq && apt-get install -y -qq --no-install-recommends gforth gcc libc6-dev libtool libtool-bin && sh make-bundle.sh && sh tools/sfx/pack.sh forth bundle run"
+}

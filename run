@@ -1,0 +1,14 @@
+#!/bin/sh
+# The entry point inside the bundle. tools/sfx's launcher unpacks the bundle
+# next to ./app and execs this, with SFX_ROOT pointing at the unpack directory.
+#
+# Nothing here reads anything outside the bundle: HOME is the bundle's own
+# (that is where the pre-built socket glue lives), -p points gforth's search
+# path at the bundled library tree, and -i names the bundled image.
+set -eu
+d=$(cd "$(dirname "$0")" && pwd)
+HOME="$d/home"
+LD_LIBRARY_PATH="$d/native${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export HOME LD_LIBRARY_PATH
+cd "$d"
+exec "$d/bin/gforth" -p "$d/lib" -i "$d/gforth.fi" "$d/hello.fs" -e "main bye"
