@@ -97,14 +97,16 @@ serve :: proc(client: net.TCP_Socket) {
 	respond(client, "200 OK", "text/html; charset=utf-8", transmute([]byte)page)
 }
 
-// "GET /path HTTP/1.1" -- the path is between the first two spaces.
+// "GET /path HTTP/1.1" -- the path is between the first two spaces. Social
+// sites append `?fbclid=...` and `?utm_source=...`, so `?` ends the path too,
+// as does `#` if a client ever sends a fragment.
 request_path :: proc(request: string) -> string {
 	start := strings.index_byte(request, ' ')
 	if start < 0 {
 		return "/"
 	}
 	rest := request[start + 1:]
-	end := strings.index_any(rest, " \r\n")
+	end := strings.index_any(rest, " \r\n?#")
 	if end < 0 {
 		return "/"
 	}
