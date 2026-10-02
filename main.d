@@ -21,7 +21,7 @@ import std.conv : to;
 import std.process : environment;
 import std.socket;
 import std.stdio : writefln, stdout;
-import std.string : indexOf, splitLines, strip, toLower;
+import std.string : indexOf, indexOfAny, splitLines, strip, toLower;
 
 enum language = "D";
 enum branch = "d";
@@ -75,7 +75,12 @@ string requestPath(string request)
     if (!afterMethod)
         return "/";
     auto beforeVersion = afterMethod[2].findSplit(" ");
-    return beforeVersion ? beforeVersion[0] : "/";
+    const target = beforeVersion ? beforeVersion[0] : "/";
+    // Social sites append `?fbclid=...` and `?utm_source=...`, so the query
+    // string -- and a fragment, if a client ever sends one -- is not part of
+    // the path the routes are matched against.
+    const cut = target.indexOfAny("?#");
+    return cut < 0 ? target : target[0 .. cut];
 }
 
 string requestHost(string request)
