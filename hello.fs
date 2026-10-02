@@ -135,7 +135,8 @@ Variable hdrlen
     reqbuf reqlen @ 2dup 13 scan nip -          \ the request line
     bl scan dup 0= IF  2drop s" /" EXIT  THEN   \ skip the method
     1 /string
-    2dup bl scan nip - ;
+    2dup bl scan nip -                          \ up to the next space
+    2dup [char] ? scan nip - ;                  \ and without any query string
 
 : set-urls ( -- )
     page-url$ acc!  s" https://" acc+  request-host acc+  s" /" acc+
