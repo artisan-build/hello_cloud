@@ -168,6 +168,12 @@ static int read_request(int fd, char *path, size_t path_cap, char *host, size_t 
     if (sscanf(buf, "%*s %255s", path) != 1)
         return -1;
 
+    /* Route on the path alone. A shared link arrives as "/?fbclid=..." or
+     * "/og.png?utm_source=...", and strcmp against a literal "/" would 404 it.
+     * The fragment never reaches a server, but cut it too and the comparison
+     * cannot be surprised. */
+    path[strcspn(path, "?#")] = '\0';
+
     for (char *line = strchr(buf, '\n'); line != NULL; line = strchr(line, '\n')) {
         line++;
         if (strncasecmp(line, "Host:", 5) != 0)
