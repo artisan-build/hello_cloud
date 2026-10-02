@@ -2,3 +2,36 @@
 main	Go	net/http (stdlib)	https://hello-cloud-production-kgvqnk.laravel.cloud
 rust	Rust	axum	https://hello-cloud-rust-lxx3gx.laravel.cloud
 zig	Zig	std.http.Server	https://hello-cloud-zig-tifwpj.laravel.cloud
+asm-arm64	aarch64 Assembly	raw Linux syscalls	https://hello-cloud-asm-arm64-savvq0.laravel.cloud
+ada	Ada	GNAT.Sockets	https://hello-cloud-ada-q6sndq.laravel.cloud
+bun	Bun	Bun.serve	https://hello-cloud-bun-v5rrkf.laravel.cloud
+c	C	hand-rolled BSD sockets	https://hello-cloud-c-ik7cwe.laravel.cloud
+csharp	C#	ASP.NET Core minimal API (NativeAOT)	https://hello-cloud-csharp-tt8sda.laravel.cloud
+cpp	C++	cpp-httplib	https://hello-cloud-cpp-fg4hgt.laravel.cloud
+clojure	Clojure	Ring handler on http-kit	https://hello-cloud-clojure-l5sevq.laravel.cloud
+cobol	COBOL	GnuCOBOL CALL to libc sockets	https://hello-cloud-cobol-nmq64r.laravel.cloud
+common-lisp	Common Lisp	Hunchentoot	https://hello-cloud-common-lisp-bghwqf.laravel.cloud
+crystal	Crystal	Kemal	https://hello-cloud-crystal-tk3ome.laravel.cloud
+d	D	std.socket	https://hello-cloud-d-bn0fog.laravel.cloud
+dart	Dart	shelf	https://hello-cloud-dart-mbdyzc.laravel.cloud
+deno	Deno	Deno.serve (std http)	https://hello-cloud-deno-4lzczq.laravel.cloud
+elixir	Elixir	Plug + Bandit	https://hello-cloud-elixir-tirkx0.laravel.cloud
+erlang	Erlang	cowboy	https://hello-cloud-erlang-thinc8.laravel.cloud
+fsharp	F#	ASP.NET Core minimal API	https://hello-cloud-fsharp-inhwxs.laravel.cloud
+fortran	Fortran	ISO_C_BINDING sockets	https://hello-cloud-fortran-4fxtvw.laravel.cloud
+haskell	Haskell	Scotty	https://hello-cloud-haskell-sq2axf.laravel.cloud
+java	Java	Javalin 6 (Jetty)	https://hello-cloud-java-ulbhx4.laravel.cloud
+julia	Julia	HTTP.jl (PackageCompiler)	https://hello-cloud-julia-7wbhxl.laravel.cloud
+kotlin	Kotlin	Ktor 3 (CIO engine)	https://hello-cloud-kotlin-avybeg.laravel.cloud
+lua	Lua	Lua 5.4 in a static C host	https://hello-cloud-lua-sxhmb8.laravel.cloud
+nim	Nim	std/asynchttpserver	https://hello-cloud-nim-oipbqf.laravel.cloud
+ocaml	OCaml	Dream	https://hello-cloud-ocaml-fqvebe.laravel.cloud
+odin	Odin	core:net	https://hello-cloud-odin-uhiugx.laravel.cloud
+pascal	Pascal	RTL Sockets unit	https://hello-cloud-pascal-ydkgnu.laravel.cloud
+perl	Perl	Mojolicious (PAR::Packer)	https://hello-cloud-perl-jqdjyt.laravel.cloud
+racket	Racket	web-server	https://hello-cloud-racket-0nx5en.laravel.cloud
+roc	Roc	basic-webserver	https://hello-cloud-roc-kwilzh.laravel.cloud
+rust-native	Rust	axum (native Rust runtime)	https://hello-cloud-rust-native-cfqbxj.laravel.cloud
+scala	Scala	cask (Undertow)	https://hello-cloud-scala-sizv0v.laravel.cloud
+swift	Swift	Hummingbird	https://hello-cloud-swift-k4nelj.laravel.cloud
+v	V	veb	https://hello-cloud-v-27locg.laravel.cloud
