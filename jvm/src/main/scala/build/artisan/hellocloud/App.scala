@@ -24,15 +24,21 @@ object App extends cask.MainRoutes:
   private val IndexUrl = String(resource("/index-url.txt"), "UTF-8").trim
   private val OgPng = resource("/og.png")
 
+  // Both endpoints take a `cask.QueryParams` they never read. cask binds query
+  // parameters to endpoint arguments and answers 400 when a request carries one
+  // the endpoint did not declare, so `/?fbclid=abc` was a 400 -- the route
+  // matched and the argument check rejected it. A `cask.QueryParams` parameter
+  // is cask's own opt-out: its ParamReader sets `unknownQueryParams`, which is
+  // the flag EntryPoint.invoke consults before it reports mismatched arguments.
   @cask.get("/")
-  def index(request: cask.Request) =
+  def index(request: cask.Request, query: cask.QueryParams) =
     cask.Response(
       render(hostOf(request)),
       headers = Seq("Content-Type" -> "text/html; charset=utf-8")
     )
 
   @cask.get("/og.png")
-  def ogPng() =
+  def ogPng(query: cask.QueryParams) =
     cask.Response(
       OgPng,
       headers = Seq("Content-Type" -> "image/png", "Cache-Control" -> "public, max-age=3600")
