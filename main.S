@@ -320,9 +320,17 @@ serve_parse:
     cmp     x23, #1
     b.lt    serve_404
 
+    // Both routes match the path, not the raw target, so the query string is
+    // measured off before either comparison.
+    mov     x0, x22
+    mov     x1, x23
+    bl      path_len
+    mov     x23, x0                     // path length
+    cbz     x23, serve_404
+
     // "/og.png"
     cmp     x23, #(s_og_path_end - s_og_path)
-    b.lt    serve_check_root
+    b.ne    serve_check_root
     mov     x0, x22
     adrp    x1, s_og_path
     add     x1, x1, :lo12:s_og_path
@@ -331,14 +339,11 @@ serve_parse:
     cbz     x0, serve_og
 
 serve_check_root:
-    // exactly "/" -- a slash followed by the space before "HTTP/1.1"
+    // exactly "/"
+    cmp     x23, #1
+    b.ne    serve_404
     ldrb    w0, [x22]
     cmp     w0, #'/'
-    b.ne    serve_404
-    cmp     x23, #2
-    b.lt    serve_404
-    ldrb    w0, [x22, #1]
-    cmp     w0, #0x20
     b.ne    serve_404
 
     // Render the page for this request's Host header.
@@ -825,6 +830,34 @@ fold_equal:
     ret
 fold_diff:
     mov     x0, #1
+    ret
+
+// -------------------------------------- path_len(ptr x0, max x1) -> length x0
+// How many bytes of the request target are the path. The target ends at the
+// space before "HTTP/1.1", and a query string is not part of the path: social
+// sites append `?fbclid=...` and `?utm_source=...`, so `?` ends it too, as
+// does `#` if a client ever sends a fragment. A leaf, so no frame.
+
+path_len:
+    mov     x2, #0
+path_len_loop:
+    cmp     x2, x1
+    b.hs    path_len_done
+    ldrb    w3, [x0, x2]
+    cmp     w3, #0x20
+    b.eq    path_len_done
+    cmp     w3, #'?'
+    b.eq    path_len_done
+    cmp     w3, #'#'
+    b.eq    path_len_done
+    cmp     w3, #13
+    b.eq    path_len_done
+    cmp     w3, #10
+    b.eq    path_len_done
+    add     x2, x2, #1
+    b       path_len_loop
+path_len_done:
+    mov     x0, x2
     ret
 
 // ------------------------------- index_byte(buf x0, len x1, byte w2) -> index/-1
