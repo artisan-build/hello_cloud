@@ -223,6 +223,12 @@ static void serve(int fd)
         }
     }
 
+    /* Shared links arrive with ?fbclid=... or #frag appended; route on the
+     * path alone, so /?x=1 is still the page and /og.png?x=1 still the PNG. */
+    char *cut = strpbrk(path, "?#");
+    if (cut)
+        *cut = '\0';
+
     if (!strcmp(path, "/og.png")) {
         respond(fd, "200 OK", "image/png", _binary_og_png_start,
                 (size_t)(_binary_og_png_end - _binary_og_png_start));
