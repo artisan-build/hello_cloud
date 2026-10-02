@@ -78,7 +78,11 @@ fn serveConnection(allocator: std.mem.Allocator, connection: std.net.Server.Conn
 }
 
 fn handle(allocator: std.mem.Allocator, request: *std.http.Server.Request) !void {
-    const target = request.head.target;
+    // Route on the path alone. Social sites append `?fbclid=...` and
+    // `?utm_source=...`, and `request.head.target` is the raw target, query
+    // string (and fragment, if a client ever sends one) included.
+    const raw = request.head.target;
+    const target = raw[0 .. std.mem.indexOfAny(u8, raw, "?#") orelse raw.len];
 
     if (std.mem.eql(u8, target, "/og.png")) {
         return request.respond(og_png, .{ .extra_headers = &.{
