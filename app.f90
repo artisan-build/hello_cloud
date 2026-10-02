@@ -188,7 +188,7 @@ program app
    character(kind=c_char) :: buf(16384)
    integer(c_int) :: listener, client, rc
    integer(c_ptrdiff_t) :: got
-   integer :: port, used, blank, eol, sp1, sp2, hpos, i
+   integer :: port, used, blank, eol, sp1, sp2, hpos, i, qpos
    character(len=:), allocatable :: text, lowered
 
    template = unhex(page_html_hex, page_html_chunks, page_html_bytes)
@@ -272,6 +272,11 @@ program app
             target = text(sp1 + 1:sp1 + sp2 - 1)
          end if
       end if
+
+      ! Shared links arrive with ?fbclid=... or #frag appended. Route on the
+      ! path alone, so /?x=1 is still the page and /og.png?x=1 still the card.
+      qpos = scan(target, '?#')
+      if (qpos > 0) target = target(1:qpos - 1)
 
       host = 'localhost'
       hpos = index(lowered, achar(10)//'host:')
