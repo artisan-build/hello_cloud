@@ -253,6 +253,15 @@ PARSE-REQUEST.
         END-IF
     END-PERFORM
 
+*> Shared links arrive with ?fbclid=... or #frag appended. Route on the
+*> path alone, so /?x=1 is still the page and /og.png?x=1 still the card.
+    PERFORM VARYING SCAN-I FROM 1 BY 1 UNTIL SCAN-I > W-TARGET-LEN
+        IF W-TARGET(SCAN-I:1) = "?" OR W-TARGET(SCAN-I:1) = "#"
+            COMPUTE W-TARGET-LEN = SCAN-I - 1
+            EXIT PERFORM
+        END-IF
+    END-PERFORM
+
     MOVE "localhost" TO W-HOST
     MOVE 9 TO W-HOST-LEN
     MOVE SPACES TO REQ-LOWER
