@@ -18,7 +18,9 @@ deno	Deno	Deno.serve (std http)	https://hello-cloud-deno-4lzczq.laravel.cloud
 elixir	Elixir	Plug + Bandit	https://hello-cloud-elixir-tirkx0.laravel.cloud
 erlang	Erlang	cowboy	https://hello-cloud-erlang-thinc8.laravel.cloud
 fsharp	F#	ASP.NET Core minimal API	https://hello-cloud-fsharp-inhwxs.laravel.cloud
+forth	Forth	gforth 0.7.3 + unix/socket.fs	https://hello-cloud-forth-4fuypl.laravel.cloud
 fortran	Fortran	ISO_C_BINDING sockets	https://hello-cloud-fortran-4fxtvw.laravel.cloud
+gleam	Gleam	wisp + mist	https://hello-cloud-gleam-y4r08q.laravel.cloud
 haskell	Haskell	Scotty	https://hello-cloud-haskell-sq2axf.laravel.cloud
 java	Java	Javalin 6 (Jetty)	https://hello-cloud-java-ulbhx4.laravel.cloud
 julia	Julia	HTTP.jl (PackageCompiler)	https://hello-cloud-julia-7wbhxl.laravel.cloud
